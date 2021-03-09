@@ -1,3 +1,4 @@
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -32,6 +33,7 @@ public class OrderShippingFacade {
 	}
 	
 	public void ViewListProduct() {
+		
 		System.out.println("Available Products:");
 		if(ProductsFromCompany.isEmpty()) {//If there are products inside, remove them
 			ProductsFromCompany.clear();
@@ -40,7 +42,9 @@ public class OrderShippingFacade {
 		ProductsFromCompany = company.getProductInformation();
 		
 		for(int i=0; i<ProductsFromCompany.size(); i++) {
-			System.out.println(i+") "+ProductsFromCompany.get(i).toString());
+			if(ProductsFromCompany.get(i).stock != 0) {//If the product is available
+				System.out.println(i+") "+ProductsFromCompany.get(i).toString());
+			}
 		}
 	}
 	
@@ -55,10 +59,20 @@ public class OrderShippingFacade {
 	
 	public void OrderForm() {
 		
+		
 	}
 	
-	public void ViewBill() {//TODO: display well the quantity of items added in the Shopping Cart
+	public void ViewBill() {
+		//Limit the number of digits print
+		DecimalFormat numberFormat = new DecimalFormat("#.00");
+		
 		int counter=0;
+		double subtotal=0.0;
+		double TaxRate = 6.5;
+		double discount=0.0;
+		double salesTaxes=0.0;
+		double totalPrice=0.0;
+		double deliveryCharges=10;
 		System.out.println("--- Bill Information ---");
 		for(int i=0; i<ProductShoppingCart.size(); i++) {
 			counter=0;
@@ -70,10 +84,18 @@ public class OrderShippingFacade {
 			System.out.println("Quantity:"+counter);
 			System.out.println("Desciption:"+ProductShoppingCart.get(i).name);
 			System.out.println("Unit Price:"+ProductShoppingCart.get(i).price);
-			System.out.println("Amount:"+ProductShoppingCart.get(i).price*counter);
+			System.out.println("Amount:"+numberFormat.format(ProductShoppingCart.get(i).price*counter));
 			System.out.println("---------------------------");
+			subtotal=subtotal+(ProductShoppingCart.get(i).price*counter);
 		}
-		//System.out.println("Subtotal: "+);
+		System.out.println("Subtotal: "+numberFormat.format(subtotal));
+		System.out.println("Discount: "+discount);
+		System.out.println("Tax Rate: "+TaxRate+"%");
+		salesTaxes = (TaxRate*subtotal)/100.0;
+		System.out.println("Sales Taxes "+TaxRate+"%: "+ numberFormat.format(salesTaxes));
+		System.out.println("Delivery Charges "+ deliveryCharges);
+		totalPrice = subtotal + deliveryCharges + salesTaxes;
+		System.out.println("Total Price :"+numberFormat.format(totalPrice)+"€");
 	}
 	
 	public void acknowledgementMessage() {
