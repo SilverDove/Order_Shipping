@@ -1,15 +1,18 @@
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
 public class OrderShippingFacade {
 	private Company company = new Company();
 	private StockEntity stock = new StockEntity();
+	private ShippingEntity shippingEntity = new ShippingEntity();
 	
 	private Scanner scan = new Scanner(System.in);
 	List<Product> ProductsFromCompany = new ArrayList<Product>();
 	List<Product> ProductShoppingCart = new ArrayList<Product>();
+	List <Integer> numberItems = new ArrayList<Integer>();
 	
 	public OrderShippingFacade() {
 		
@@ -29,6 +32,7 @@ public class OrderShippingFacade {
 		//If user wants to pay
 		ViewBill();
 		OrderForm();
+		acknowledgementMessage();
 		
 	}
 	
@@ -51,14 +55,61 @@ public class OrderShippingFacade {
 	public void AddProductToTheShoppingCart(int index) {
 		Product currentProduct = new Product(ProductsFromCompany.get(index).id, ProductsFromCompany.get(index).name, ProductsFromCompany.get(index).price, ProductsFromCompany.get(index).stock);
 		if(currentProduct.stock!=0) {//If the item is available
-			ProductShoppingCart.add(ProductsFromCompany.get(index));//Add the product into the Shopping Cart
-			//Refresh the stock
-			stock.modifyStockForProduct(currentProduct);
+			if(ProductShoppingCart.size()>0) {
+				for(int i=0 ; i<ProductShoppingCart.size(); i++) {//Check whether the product was already added
+					if(currentProduct.id.equals(ProductShoppingCart.get(i).id)) {//If the product already exists
+						//Increase the number of item
+						int counter = numberItems.get(i)+1;
+						numberItems.set(i, counter);
+						//Refresh the stock
+						stock.modifyStockForProduct(ProductsFromCompany.get(index));
+						break;
+						
+					}else {//the product is not already added
+						//add the product in the Shopping Cart
+						ProductShoppingCart.add(currentProduct);//Add the product into the Shopping Cart
+						numberItems.add(1);	
+						//Refresh the stock
+						stock.modifyStockForProduct(ProductsFromCompany.get(index));
+						break;
+						
+					}
+				}	
+			}else {//First element to add into the list
+				//add the product in the Shopping Cart
+				ProductShoppingCart.add(currentProduct);//Add the product into the Shopping Cart
+				numberItems.add(1);
+				//Refresh the stock
+				stock.modifyStockForProduct(currentProduct);
+			}
+			
 		}
 	}
 	
 	public void OrderForm() {
+		String firstName, lastName, address, phoneNumber, email;
 		
+		scan.nextLine();//clean buffer
+		
+		System.out.println("Please enter your information :");
+		System.out.println("First Name :");
+		firstName = scan.nextLine();
+		System.out.println("Last Name :");
+		lastName = scan.nextLine();
+		System.out.println("Address :");
+		address = scan.nextLine();
+		System.out.println("Phone Number :");
+		phoneNumber = scan.nextLine();
+		System.out.println("E-mail Address :");
+		email =scan.next();
+		
+		//Create customer
+		Customer customer = new Customer(firstName, lastName, address, email, phoneNumber);
+		//Send information to the Shipping Entity
+		for(int i=0; i<ProductShoppingCart.size();i++) {
+			//Contact ShippingEntity
+			shippingEntity.UpdateShippingDetails(customer, ProductShoppingCart.get(i), numberItems.get(i));
+		}
 		
 	}
 	
@@ -66,27 +117,21 @@ public class OrderShippingFacade {
 		//Limit the number of digits print
 		DecimalFormat numberFormat = new DecimalFormat("#.00");
 		
-		int counter=0;
 		double subtotal=0.0;
 		double TaxRate = 6.5;
 		double discount=0.0;
 		double salesTaxes=0.0;
 		double totalPrice=0.0;
 		double deliveryCharges=10;
+		
 		System.out.println("--- Bill Information ---");
 		for(int i=0; i<ProductShoppingCart.size(); i++) {
-			counter=0;
-			for(int j=0; j<ProductShoppingCart.size();j++ ) {
-				if(ProductShoppingCart.get(i).id.equals(ProductShoppingCart.get(j).id)) {//If the user want to buy more than one a specific product
-					counter++;
-				}
-			}
-			System.out.println("Quantity:"+counter);
-			System.out.println("Desciption:"+ProductShoppingCart.get(i).name);
-			System.out.println("Unit Price:"+ProductShoppingCart.get(i).price);
-			System.out.println("Amount:"+numberFormat.format(ProductShoppingCart.get(i).price*counter));
-			System.out.println("---------------------------");
-			subtotal=subtotal+(ProductShoppingCart.get(i).price*counter);
+				System.out.println("Quantity:"+numberItems.get(i));
+				System.out.println("Desciption:"+ProductShoppingCart.get(i).name);
+				System.out.println("Unit Price:"+ProductShoppingCart.get(i).price);
+				System.out.println("Amount:"+numberFormat.format(ProductShoppingCart.get(i).price*numberItems.get(i)));
+				System.out.println("---------------------------");
+				subtotal=subtotal+(ProductShoppingCart.get(i).price*numberItems.get(i));
 		}
 		System.out.println("Subtotal: "+numberFormat.format(subtotal));
 		System.out.println("Discount: "+discount);
