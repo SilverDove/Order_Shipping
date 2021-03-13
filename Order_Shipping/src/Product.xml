@@ -126,13 +126,6 @@
 		<price>28.0</price>
 		<stock>18</stock>
 	</product>
-
-	<product>
-		<id>3fb69921-07cb-4df7-887e-160ba093f978</id>
-		<name>Lamp</name>
-		<price>29.95</price>
-		<stock>6</stock>
-	</product>
 	
 </products>
 	
