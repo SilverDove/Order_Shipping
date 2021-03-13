@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<products>
+	<product>
+		<id>1f034f49-f4da-4edc-8d52-1f824a60c060</id>
+		<name> shoes</name>
+		<price>19.71</price>
+		<stock>0</stock>
+	</product>
+	<product>
+		<id>57def70d-c27c-4399-974e-8f4eed234e16</id>
+		<name>Prada bag</name>
+		<price>12.19</price>
+		<stock>2</stock>
+
+	</product>
+	<product>
+		<id>999c347c-dc56-4df5-bb21-19a1a66acb82</id>
+		<name>noodles</name>
+		<price>19.64</price>
+		<stock>5</stock>
+	</product>
+
+	<product>
+		<id>911e6209-931b-42dc-b714-6ccebe692d54</id>
+		<name>Badge</name>
+		<price>13.99</price>
+		<stock>9</stock>
+	</product>
+
+	<product>
+		<id>f2c3cd89-1315-4f8e-babd-468d7568fe99</id>
+		<name>DVD</name>
+		<price>13.99</price>
+		<stock>18</stock>
+	</product>
+
+	<product>
+		<id>541128dd-ab19-401b-85e2-f467b7f06d21</id>
+		<name>Little Miss Sunshine</name>
+		<price>15.0</price>
+		<stock>10</stock>
+	</product>
+
+	<product>
+		<id>64257a56-dacc-4290-9404-d2385486e77e</id>
+		<name>Titanic picture</name>
+		<price>15.0</price>
+		<stock>10</stock>
+	</product>
+
+	<product>
+		<id>e0c6b01b-36e2-4170-b50b-66a45292385f</id>
+		<name>Frozen brain</name>
+		<price>19.99</price>
+		<stock>15</stock>
+	</product>
+
+	<product>
+		<id>a70777e5-c6de-4a28-834c-d8ed3b2396a0</id>
+		<name>Get Out</name>
+		<price>15.0</price>
+		<stock>14</stock>
+	</product>
+
+	<product>
+		<id>b9dfaf13-36e3-440a-a7d1-567fd0e2d212</id>
+		<name>Apollo 13</name>
+		<price>15.0</price>
+		<stock>3</stock>
+	</product>
+
+	<product>
+		<id>8db0ba71-33b0-4eb8-91f2-49eded342100</id>
+		<name>Globe</name>
+		<price>26.95</price>
+		<stock>15</stock>
+	</product>
+
+	<product>
+		<id>f784ce7e-1529-4e8e-ba01-8d0aafabae00</id>
+		<name>School Pack</name>
+		<price>25.0</price>
+		<stock>10</stock>
+	</product>
+
+	<product>
+		<id>a2145941-96c3-49ae-901c-2f121e625ec3</id>
+		<name>Ventoline</name>
+		<price>25.95</price>
+		<stock>10</stock>
+	</product>
+
+	<product>
+		<id>f3100e78-db5a-4213-a474-4c9068bca950</id>
+		<name>Lolipop</name>
+		<price>27.95</price>
+		<stock>20</stock>
+	</product>
+
+	<product>
+		<id>401e7efd-9486-446d-95b6-439258d44804</id>
+		<name>Night Boat</name>
+		<price>25.95</price>
+		<stock>5</stock>
+	</product>
+
+	<product>
+		<id>29337cd9-9cfa-4d4e-982a-36b79bd5b549</id>
+		<name>Cigarettes</name>
+		<price>30.0</price>
+		<stock>20</stock>
+	</product>
+
+	<product>
+		<id>76e77ff0-7926-4b87-9988-0d75cb5cfff0</id>
+		<name> Yellow Mini House</name>
+		<price>26.0</price>
+		<stock>11</stock>
+	</product>
+
+	<product>
+		<id>a40718e5-a628-40f2-87fb-5982b8d8c42b</id>
+		<name>Bandage</name>
+		<price>28.0</price>
+		<stock>18</stock>
+	</product>
+
+	<product>
+		<id>3fb69921-07cb-4df7-887e-160ba093f978</id>
+		<name>Lamp</name>
+		<price>29.95</price>
+		<stock>6</stock>
+	</product>
+	
+</products>
+	
