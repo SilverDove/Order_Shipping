@@ -1,5 +1,6 @@
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.GridLayout;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -14,16 +15,47 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 
 public class OrderShippingGUI implements ActionListener{
 	/*GUI*/
 	private JFrame frame;//Window of the shop
-	//Create element for first window
+	//Create elements for first window
 	private JPanel productPanelAvailable = new JPanel(new BorderLayout());//Panel which contains the list of available product
 	private  JList<String> productList; //list of available product	
 	private  JButton AddButton = new JButton ("Add to the Shopping Cart");
 	private  JButton GoShoppingCart = new JButton ("Access Shopping Cart");
+	
+	//Create elements second window
+	private JPanel shoppingCartPanel = new JPanel(new GridLayout(1,2));//Main Panel
+	/*Contents of customerPanel(1,1)*/
+	private JPanel OrderFormPanel = new JPanel(new GridLayout(6,1));//Panel which contains the space where to log in
+			/*Contents of customerPanelSearch(1,1)*/
+	private JPanel OrderFormPanelFirstName = new JPanel(new BorderLayout());//Panel which contains elements to indicate First Name
+			/*Contents of customerPanelSearch(2,1)*/
+	private JPanel OrderFormPanelLastName = new JPanel(new BorderLayout());//Panel which contains elements to indicate Last Name
+			/*Contents of customerPanelSearch(3,1)*/
+	private JPanel OrderFormPanelAddress = new JPanel(new BorderLayout());//Panel which contains elements to indicate Address
+		/*Contents of customerPanelSearch(4,1)*/
+	private JPanel OrderFormPanelEmail = new JPanel(new BorderLayout());//Panel which contains elements to indicate Email
+		/*Contents of customerPanelSearch(5,1)*/
+	private JPanel OrderFormPanelPhoneNumber = new JPanel(new BorderLayout());//Panel which contains elements to indicate Phone number
+		/*Contents of customerPanelSearch(5,1)*/
+	private JButton orderButton = new JButton ("Order");//Button to check if customer exists or not
+		/*Contents of customerPanel(1,2)*/
+	private JPanel billPanelInfo = new JPanel(new BorderLayout());//Panel which contains information about the product
+			/*Contents of customerPanelInfo*/
+	private JLabel billInfoLabel = new JLabel();//Description of the product
+	
+	//JTextField
+	private JTextField customerFirstName = new JTextField(20);
+	private JTextField customerLastName = new JTextField(20);
+	private JTextField customerAddress = new JTextField(20);
+	private JTextField customerEmail = new JTextField(20);
+	private JTextField customerPhoneNumber = new JTextField(20);
+	
+	//Create elements last window
 	
 	/*Classes*/
 	private Company company = new Company();
@@ -54,6 +86,9 @@ public class OrderShippingGUI implements ActionListener{
 		
 		GoShoppingCart.setActionCommand("Shopping Cart");
 		GoShoppingCart.addActionListener((java.awt.event.ActionListener) this);
+		
+		orderButton.setActionCommand("Order");
+		orderButton.addActionListener((java.awt.event.ActionListener) this);
 	    
 	    ListofProduct();
 	}
@@ -84,6 +119,46 @@ public class OrderShippingGUI implements ActionListener{
 		
 		productPanelAvailable.repaint();//tell a component to repaint itself.
 		productPanelAvailable.revalidate();// tell the layout manager to reset based on the new component list
+	}
+	
+	private void ShoppingCart() {
+		productPanelAvailable.setVisible(false);
+		
+		/*Order form area*/
+		OrderFormPanelFirstName.add(new JLabel("First name"), BorderLayout.NORTH);//Add text to Panel
+		OrderFormPanelFirstName.add(customerFirstName, BorderLayout.CENTER);//Add Text field to Panel
+		OrderFormPanel.add(OrderFormPanelFirstName);
+		
+		OrderFormPanelLastName.add(new JLabel("Last name"), BorderLayout.NORTH);//Add text to Panel
+		OrderFormPanelLastName.add(customerLastName, BorderLayout.CENTER);//Add Text field to Panel
+		OrderFormPanel.add(OrderFormPanelLastName);
+		
+		OrderFormPanelAddress.add(new JLabel("Address"), BorderLayout.NORTH);//Add text to Panel
+		OrderFormPanelAddress.add(customerAddress, BorderLayout.CENTER);//Add Text field to Panel
+		OrderFormPanel.add(OrderFormPanelAddress);
+		
+		OrderFormPanelEmail.add(new JLabel("Email"), BorderLayout.NORTH);//Add text to Panel
+		OrderFormPanelEmail.add(customerEmail, BorderLayout.CENTER);//Add Text field to Panel
+		OrderFormPanel.add(OrderFormPanelEmail);
+		
+		OrderFormPanelPhoneNumber.add(new JLabel("PhoneNumber"), BorderLayout.NORTH);//Add text to Panel
+		OrderFormPanelPhoneNumber.add(customerPhoneNumber, BorderLayout.CENTER);//Add Text field to Panel
+		OrderFormPanel.add(OrderFormPanelPhoneNumber);
+		
+		OrderFormPanel.add(orderButton);//Add Search Button to Panel
+		shoppingCartPanel.add(OrderFormPanel);
+			/*Bill information area*/
+		billPanelInfo.add(new JLabel("Bill Information"), BorderLayout.NORTH);//Add text to Panel
+		billPanelInfo.add(billInfoLabel, BorderLayout.CENTER);//Add Label to Panel
+		shoppingCartPanel.add(billPanelInfo);
+		//TODO: Display information of the bill
+		
+		frame.add(shoppingCartPanel);
+		
+		shoppingCartPanel.repaint();//tell a component to repaint itself.
+		shoppingCartPanel.revalidate();// tell the layout manager to reset based on the new component list
+		
+		
 	}
 	
 	private DefaultListModel<String> GetListProduct(){//Get list of Product to display in a JList
@@ -124,7 +199,11 @@ public class OrderShippingGUI implements ActionListener{
 		break;
 		
 		case "Shopping Cart"://Go to the shopping cart (next window)
-			
+			ShoppingCart();
+		break;
+		
+		case "Order":
+			//TODO: save information + change window
 		break;
 		
 		}
