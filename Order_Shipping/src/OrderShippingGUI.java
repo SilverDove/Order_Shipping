@@ -56,6 +56,7 @@ public class OrderShippingGUI implements ActionListener{
 	private JTextField customerPhoneNumber = new JTextField(20);
 	
 	//Create elements last window
+	private JPanel ValidationPanel = new JPanel(new BorderLayout());//Validation purchase
 	
 	/*Classes*/
 	private Company company = new Company();
@@ -157,8 +158,15 @@ public class OrderShippingGUI implements ActionListener{
 		
 		shoppingCartPanel.repaint();//tell a component to repaint itself.
 		shoppingCartPanel.revalidate();// tell the layout manager to reset based on the new component list
+	}
+	
+	private void ValidationMessage() {
+		shoppingCartPanel.setVisible(false);
 		
-		
+		/*validation area*/
+		ValidationPanel.add(new JLabel("Thank you! Your order has been taken into account"), BorderLayout.CENTER);
+		frame.add(ValidationPanel);
+
 	}
 	
 	private DefaultListModel<String> GetListProduct(){//Get list of Product to display in a JList
@@ -204,6 +212,9 @@ public class OrderShippingGUI implements ActionListener{
 		
 		case "Order":
 			//TODO: save information + change window
+			
+			//Update the Screen
+			ValidationMessage();
 		break;
 		
 		}
