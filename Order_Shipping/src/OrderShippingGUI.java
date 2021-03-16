@@ -19,6 +19,11 @@ import javax.swing.ListSelectionModel;
 public class OrderShippingGUI implements ActionListener{
 	/*GUI*/
 	private JFrame frame;//Window of the shop
+	//Create element for first window
+	private JPanel productPanelAvailable = new JPanel(new BorderLayout());//Panel which contains the list of available product
+	private  JList<String> productList; //list of available product	
+	private  JButton AddButton = new JButton ("Add to the Shopping Cart");
+	private  JButton GoShoppingCart = new JButton ("Access Shopping Cart");
 	
 	/*Classes*/
 	private Company company = new Company();
@@ -29,6 +34,7 @@ public class OrderShippingGUI implements ActionListener{
 	private Scanner scan = new Scanner(System.in);
 	List<Product> ProductsFromCompany = new ArrayList<Product>();
 	List<Product> ProductShoppingCart = new ArrayList<Product>();
+	List<Product> AvailableProductFromCompany = new ArrayList<Product>();
 	List <Integer> numberItems = new ArrayList<Integer>();
 	
 	
@@ -41,16 +47,18 @@ public class OrderShippingGUI implements ActionListener{
 	    frame.setMinimumSize(screenSize);//full screen mode 
 	    frame.pack();
 	    frame.setVisible(true);
+		
+		/*Button interactions*/
+		AddButton.setActionCommand("Add Product");
+		AddButton.addActionListener((java.awt.event.ActionListener) this);
+		
+		GoShoppingCart.setActionCommand("Shopping Cart");
+		GoShoppingCart.addActionListener((java.awt.event.ActionListener) this);
 	    
 	    ListofProduct();
 	}
 	
 	private void ListofProduct() {
-		/*Create element*/
-		JPanel productPanelAvailable = new JPanel(new BorderLayout());//Panel which contains the list of available product
-		JList<String> productList; //list of available product	
-		JButton AddButton = new JButton ("Add to the Shopping Cart");
-		JButton GoShoppingCart = new JButton ("Access Shopping Cart");
 		
 		//Configure screen
 		productPanelAvailable.add(new JLabel("Available products"), BorderLayout.NORTH);//Add text to Panel
@@ -68,7 +76,10 @@ public class OrderShippingGUI implements ActionListener{
 		productList.setLayoutOrientation(JList.VERTICAL);
 		JScrollPane scrollPane = new JScrollPane(productList);//Add a Scroll Bar
 		productPanelAvailable.add(scrollPane, BorderLayout.CENTER);//Add a Scroll Bar to the Panel
-		productPanelAvailable.add(AddButton, BorderLayout.SOUTH);//Add the Search Button to the Panel
+		productPanelAvailable.add(AddButton, BorderLayout.SOUTH);//Add the Add Button to the Panel
+		//if(ProductShoppingCart.size()>0) {
+			productPanelAvailable.add(GoShoppingCart,BorderLayout.EAST);//Add the Go to the Shopping Cart Panel
+		//}
 		frame.add(productPanelAvailable);
 		
 		productPanelAvailable.repaint();//tell a component to repaint itself.
@@ -80,9 +91,14 @@ public class OrderShippingGUI implements ActionListener{
 		DefaultListModel<String> l = new DefaultListModel<String>();
 		int index = 0;
 		
+		if(AvailableProductFromCompany.size()!=0) {//If the list of available product is not empty
+			AvailableProductFromCompany.clear();
+		}
+		
 		for (int i=0; i<ProductsFromCompany.size(); i++) {//Go through the list of Products until the end
 			if(ProductsFromCompany.get(i).getStock() != 0) {//If the product still have available items to buy, add it to the list to return
 				l.add(index, "Name: "+ProductsFromCompany.get(i).getName()+" --------- Price: "+ProductsFromCompany.get(i).getPrice()+"--------- Stock: "+ProductsFromCompany.get(i).getStock());
+				AvailableProductFromCompany.add(index, ProductsFromCompany.get(i));
 				index ++;
 			}
 		}
@@ -91,11 +107,64 @@ public class OrderShippingGUI implements ActionListener{
 	}
 	
 	@Override
-	public void actionPerformed(ActionEvent arg0) {//Actions after the interaction with the buttons
-		// TODO Auto-generated method stub
+	public void actionPerformed(ActionEvent e) {//Actions after the interaction with the buttons
+		switch (e.getActionCommand()) {
+		
+		case "Add Product"://if press Select button in the Product Area, we must display add product into shopping cart
+			
+			int index = productList.getSelectedIndex();//Get the index of the selected product from the List
+			Product currentProduct = AvailableProductFromCompany.get(index);//Get selected product according to its index
+
+			//Update the list of product by calling add product to the shopping cart
+			addProductIntoShoppingCart(currentProduct);
+			
+			//Update the screen
+			ListofProduct();
+			
+		break;
+		
+		case "Shopping Cart"://Go to the shopping cart (next window)
+			
+		break;
+		
+		}
 		
 	}
 	
+	private void addProductIntoShoppingCart(Product p) {
+		if(p.stock!=0) {//If the item is available
+			if(ProductShoppingCart.size()>0) {
+				for(int i=0 ; i<ProductShoppingCart.size(); i++) {//Check whether the product was already added
+					if(p.id.equals(ProductShoppingCart.get(i).id)) {//If the product already exists
+						//Increase the number of item
+						int counter = numberItems.get(i)+1;
+						numberItems.set(i, counter);
+						//Refresh the stock
+						stock.modifyStockForProduct(p);
+						break;
+						
+					}else {//the product is not already added
+						//add the product in the Shopping Cart
+						ProductShoppingCart.add(p);//Add the product into the Shopping Cart
+						numberItems.add(1);	
+						//Refresh the stock
+						stock.modifyStockForProduct(p);
+						break;
+						
+					}
+				}	
+			}else {//First element to add into the list
+				//add the product in the Shopping Cart
+				ProductShoppingCart.add(p);//Add the product into the Shopping Cart
+				numberItems.add(1);
+				//Refresh the stock
+				stock.modifyStockForProduct(p);
+			}
+			
+		}
+		
+	}
+
 	public static void main(String[] args) {
 		new OrderShippingGUI();//run the Graphical User Interface
 	}
