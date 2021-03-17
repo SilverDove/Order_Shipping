@@ -113,9 +113,9 @@ public class OrderShippingGUI implements ActionListener{
 		JScrollPane scrollPane = new JScrollPane(productList);//Add a Scroll Bar
 		productPanelAvailable.add(scrollPane, BorderLayout.CENTER);//Add a Scroll Bar to the Panel
 		productPanelAvailable.add(AddButton, BorderLayout.SOUTH);//Add the Add Button to the Panel
-		//if(ProductShoppingCart.size()>0) {
+		if(ProductShoppingCart.size()>0) {
 			productPanelAvailable.add(GoShoppingCart,BorderLayout.EAST);//Add the Go to the Shopping Cart Panel
-		//}
+		}
 		frame.add(productPanelAvailable);
 		
 		productPanelAvailable.repaint();//tell a component to repaint itself.
