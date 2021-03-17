@@ -230,7 +230,7 @@ public class OrderShippingGUI implements ActionListener{
 						int counter = numberItems.get(i)+1;
 						numberItems.set(i, counter);
 						//Refresh the stock
-						stock.modifyStockForProduct(p);
+						stock.modifyStockForProduct(p , ProductsFromCompany);
 						break;
 						
 					}else {//the product is not already added
@@ -238,7 +238,7 @@ public class OrderShippingGUI implements ActionListener{
 						ProductShoppingCart.add(p);//Add the product into the Shopping Cart
 						numberItems.add(1);	
 						//Refresh the stock
-						stock.modifyStockForProduct(p);
+						stock.modifyStockForProduct(p, ProductsFromCompany);
 						break;
 						
 					}
@@ -248,7 +248,7 @@ public class OrderShippingGUI implements ActionListener{
 				ProductShoppingCart.add(p);//Add the product into the Shopping Cart
 				numberItems.add(1);
 				//Refresh the stock
-				stock.modifyStockForProduct(p);
+				stock.modifyStockForProduct(p, ProductsFromCompany);
 			}
 			
 		}

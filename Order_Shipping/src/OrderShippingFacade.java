@@ -1,3 +1,4 @@
+/*
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -151,4 +152,4 @@ public class OrderShippingFacade {
 		new OrderShippingFacade();
 	}
 
-}
+}*/
