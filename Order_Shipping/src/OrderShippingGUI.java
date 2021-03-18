@@ -80,9 +80,9 @@ public class OrderShippingGUI implements ActionListener{
 		//Create and initialize the window
 		frame = new JFrame("OrderShipping");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();//Get size of the screen
-	    frame.setMinimumSize(screenSize);//full screen mode 
-	    frame.pack();
+		//Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();//Get size of the screen
+	    frame.setSize(500, 500);//full screen mode 
+	    //frame.pack();
 	    frame.setVisible(true);
 		
 		/*Button interactions*/
@@ -154,9 +154,9 @@ public class OrderShippingGUI implements ActionListener{
 		shoppingCartPanel.add(OrderFormPanel);
 			/*Bill information area*/
 		billPanelInfo.add(new JLabel("Bill Information"), BorderLayout.NORTH);//Add text to Panel
+		billInfoLabel.setText(company.getBillInformation(ProductShoppingCart, numberItems));//Display information of the bill
 		billPanelInfo.add(billInfoLabel, BorderLayout.CENTER);//Add Label to Panel
 		shoppingCartPanel.add(billPanelInfo);
-		//TODO: Display information of the bill
 		
 		frame.add(shoppingCartPanel);
 		
@@ -225,29 +225,35 @@ public class OrderShippingGUI implements ActionListener{
 	}
 	
 	private void addProductIntoShoppingCart(Product p) {
+		boolean flag =false;
 		if(p.stock!=0) {//If the item is available
 			if(ProductShoppingCart.size()>0) {
+				System.out.println("size is "+ProductShoppingCart.size());
 				for(int i=0 ; i<ProductShoppingCart.size(); i++) {//Check whether the product was already added
-					if(p.id.equals(ProductShoppingCart.get(i).id)) {//If the product already exists
+					System.out.println("ProductShoppingCart("+i+"):"+ ProductShoppingCart.get(i).getName());
+					System.out.println("p:"+ p.getName());
+					System.out.println("Comparaison:"+p.getID()+" versus "+ProductShoppingCart.get(i).getID());
+					if(p.getID().compareTo(ProductShoppingCart.get(i).getID())==0) {//If the product already exists
 						//Increase the number of item
 						int counter = numberItems.get(i)+1;
 						numberItems.set(i, counter);
 						//Refresh the stock
 						stock.modifyStockForProduct(p , ProductsFromCompany);
 						System.out.println("1");
-						break;
-						
-					}else {//the product is not already added
-						//add the product in the Shopping Cart
-						ProductShoppingCart.add(p);//Add the product into the Shopping Cart
-						numberItems.add(1);	
-						//Refresh the stock
-						stock.modifyStockForProduct(p, ProductsFromCompany);
-						System.out.println("2");
-						break;
-						
+						flag=true;
+						break;	
 					}
-				}	
+				}
+				
+				if(flag == false) {//the product is not already added
+					//add the product in the Shopping Cart
+					ProductShoppingCart.add(p);//Add the product into the Shopping Cart
+					numberItems.add(1);	
+					//Refresh the stock
+					stock.modifyStockForProduct(p, ProductsFromCompany);
+					System.out.println("2");
+				}
+				
 			}else {//First element to add into the list
 				//add the product in the Shopping Cart
 				ProductShoppingCart.add(p);//Add the product into the Shopping Cart

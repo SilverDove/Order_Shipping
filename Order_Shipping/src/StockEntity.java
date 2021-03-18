@@ -76,19 +76,14 @@ public class StockEntity {
 	}
 	
 	public void modifyStockForProduct(Product p, List<Product> productList) {
-		//write in the file
-		System.out.println("We modify the stock information for the product "+p.getName());
 		
 		//Modify the list
 		for(int i=0 ;i<productList.size(); i++) {
-			System.out.println(productList.get(i).getID().toString()+" and product is "+ p.getID().toString());
 			if(p.getID().compareTo(productList.get(i).getID()) == 0) {//If found the product inside the list
 				//Update the list
 				int newStock = productList.get(i).getStock()-1;
-				System.out.println("New stock is "+newStock);
 				productList.get(i).setStock(newStock);
 				entityProducts.get(i).setStock(newStock);
-				System.out.println("entityProducts.get(i).setStock(newStock)= "+ entityProducts.get(i).getStock());
 				break;
 			}
 		}
@@ -126,7 +121,6 @@ public class StockEntity {
 
 				// stock elements
 				Element stock = doc.createElement("stock");
-				System.out.println("Here "+ entityProducts.get(i).getStock());
 				stock.appendChild(doc.createTextNode(String.valueOf(entityProducts.get(i).getStock())));
 				product.appendChild(stock);
 			}

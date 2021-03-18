@@ -1,5 +1,6 @@
 
 import java.io.File;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -20,7 +21,7 @@ import org.w3c.dom.NodeList;
 public class Company {
 	
 	private ShippingEntity shipping = new ShippingEntity();
-	private static StockEntity stock = new StockEntity();
+	private StockEntity stock = new StockEntity();
 	
 	private List<Product> CompanyProducts = new ArrayList<Product>();
 	
@@ -30,10 +31,6 @@ public class Company {
 	}
 	
 	public List<Product> getCompanyProducts(){
-		System.out.println("getCompanyProducts");
-		for(int i=0; i<CompanyProducts.size(); i++) {
-			System.out.println(CompanyProducts.get(i).toString());
-		}
 		
 		return CompanyProducts;
 	}
@@ -87,6 +84,43 @@ public class Company {
 		//write into file
 	}
 	
+	public String getBillInformation(List<Product> ProductShoppingCart, List<Integer> numberItems) {//get of the information about the final bill
+		//Limit the number of digits print
+				DecimalFormat numberFormat = new DecimalFormat("#.00");
+				String billInfo;
+				
+				double subtotal=0.0;
+				double TaxRate = 6.5;
+				double discount=0.0;
+				double salesTaxes=0.0;
+				double totalPrice=0.0;
+				double deliveryCharges=10;
+				
+				billInfo = "<html>";
+				
+				for(int i=0; i<ProductShoppingCart.size(); i++) {
+						billInfo = billInfo + "Quantity:"+numberItems.get(i)+
+									"<br>Desciption:"+ProductShoppingCart.get(i).name+
+									"<br>Unit Price:"+ProductShoppingCart.get(i).price+
+									"<br>Amount:"+numberFormat.format(ProductShoppingCart.get(i).price*numberItems.get(i))+
+									"<br>---------------------------<br>";
+						subtotal=subtotal+(ProductShoppingCart.get(i).price*numberItems.get(i));
+				}
+				
+				salesTaxes = (TaxRate*subtotal)/100.0;
+				totalPrice = subtotal + deliveryCharges + salesTaxes;
+				
+				billInfo = billInfo + 
+						   "<br>Subtotal: "+numberFormat.format(subtotal)+
+						   "<br>Discount: "+discount+
+						   "<br>Tax Rate: "+TaxRate+"%"+
+						   "<br>Sales Taxes "+TaxRate+"%: "+ numberFormat.format(salesTaxes)+
+						   "<br>Delivery Charges "+ deliveryCharges+
+						   "<br><br>Total Price :"+numberFormat.format(totalPrice)+"€ </html>";
+
+				return billInfo;
+	}
+	
 	public void modifyProductStock() {
 		//modify the product stock by calling the function from StockEntity
 		stock.GetStockFromFile();
@@ -96,7 +130,6 @@ public class Company {
 			for(int j=0; j<stockInfo.size(); j++) {
 				if(CompanyProducts.get(i).getID().compareTo(stockInfo.get(j).getID()) == 0) {//If find the same product
 					CompanyProducts.get(i).setStock(stockInfo.get(j).getStock());
-					System.out.println(stockInfo.get(j).getStock());
 					break;
 				}
 			}
