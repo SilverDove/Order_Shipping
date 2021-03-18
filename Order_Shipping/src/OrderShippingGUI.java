@@ -59,9 +59,9 @@ public class OrderShippingGUI implements ActionListener{
 	private JPanel ValidationPanel = new JPanel(new BorderLayout());//Validation purchase
 	
 	/*Classes*/
-	private Company company = new Company();
-	private StockEntity stock = new StockEntity();
-	private ShippingEntity shippingEntity = new ShippingEntity();
+	private StockEntity stock;
+	private Company company;
+	private ShippingEntity shippingEntity;
 	
 	/*Variables*/
 	private Scanner scan = new Scanner(System.in);
@@ -72,6 +72,10 @@ public class OrderShippingGUI implements ActionListener{
 	
 	
 	private OrderShippingGUI() {//Graphical User Interface of the Store
+		//Initialize entities
+		stock = new StockEntity();
+		company = new Company();
+		shippingEntity = new ShippingEntity();
 		
 		//Create and initialize the window
 		frame = new JFrame("OrderShipping");
@@ -101,7 +105,7 @@ public class OrderShippingGUI implements ActionListener{
 		frame.add(productPanelAvailable);
 		
 		//Get products
-		DefaultListModel<String> list  =GetListProduct();
+		DefaultListModel<String> list=GetListProduct();
 		productList = new JList<String>(list);
 		
 		//Update contents of the panel
@@ -170,7 +174,7 @@ public class OrderShippingGUI implements ActionListener{
 	}
 	
 	private DefaultListModel<String> GetListProduct(){//Get list of Product to display in a JList
-		ProductsFromCompany = company.getProductInformation();//Get the list of product from the store
+		ProductsFromCompany = company.getCompanyProducts();//Get the list of product from the store
 		DefaultListModel<String> l = new DefaultListModel<String>();
 		int index = 0;
 		
@@ -218,7 +222,6 @@ public class OrderShippingGUI implements ActionListener{
 		break;
 		
 		}
-		
 	}
 	
 	private void addProductIntoShoppingCart(Product p) {
@@ -231,6 +234,7 @@ public class OrderShippingGUI implements ActionListener{
 						numberItems.set(i, counter);
 						//Refresh the stock
 						stock.modifyStockForProduct(p , ProductsFromCompany);
+						System.out.println("1");
 						break;
 						
 					}else {//the product is not already added
@@ -239,6 +243,7 @@ public class OrderShippingGUI implements ActionListener{
 						numberItems.add(1);	
 						//Refresh the stock
 						stock.modifyStockForProduct(p, ProductsFromCompany);
+						System.out.println("2");
 						break;
 						
 					}
@@ -249,8 +254,9 @@ public class OrderShippingGUI implements ActionListener{
 				numberItems.add(1);
 				//Refresh the stock
 				stock.modifyStockForProduct(p, ProductsFromCompany);
+				System.out.println("3");
 			}
-			
+			company.modifyProductStock();
 		}
 		
 	}
