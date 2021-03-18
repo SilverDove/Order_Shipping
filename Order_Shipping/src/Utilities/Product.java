@@ -1,9 +1,24 @@
+package Utilities;
+import java.util.UUID;
 
 public class Product {
 	
-	protected String name;
-	protected double price;
-	protected int stock;
+	private String name;
+	private double price;
+	private int stock;
+	private UUID id;
+	
+	public Product(UUID id, String name, double price, int stock) {
+		this.id=id;
+		this.name=name;
+		this.price=price;
+		this.stock=stock;
+	}
+	
+	public UUID getID() {
+		return id;
+	}
+	
 	
 	public String getName() {//returns product's name
 		return name;
@@ -21,7 +36,7 @@ public class Product {
 		return "\n Product's name: "+ name +"\n Price: "+ price +"\n Available stock: "+ stock;
 	}
 	
-	public void updateStock(int newStock) {//update the stock of the product
+	public void setStock(int newStock) {//update the stock of the product
 		this.stock = newStock;
 	}
 
