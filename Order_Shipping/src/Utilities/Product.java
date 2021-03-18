@@ -20,23 +20,23 @@ public class Product {
 	}
 	
 	
-	public String getName() {//returns product's name
+	public String getName() {
 		return name;
 	}
 	
-	public double getPrice() {//returns product's price
+	public double getPrice() {
 		return price;
 	}
 	
-	public int getStock() {//returns product's stock
+	public int getStock() {
 		return stock;
 	}
 	
-	public String toString() {//returns product's information
+	public String toString() {
 		return "\n Product's name: "+ name +"\n Price: "+ price +"\n Available stock: "+ stock;
 	}
 	
-	public void setStock(int newStock) {//update the stock of the product
+	public void setStock(int newStock) {
 		this.stock = newStock;
 	}
 
