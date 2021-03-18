@@ -4,6 +4,9 @@ import java.awt.GridLayout;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Date;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -18,9 +21,18 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 
-public class OrderShippingGUI implements ActionListener{
+import CompanyEntity.Company;
+import ShippingEntity.ShippingEntity;
+import StockEntity.StockEntity;
+import Utilities.Customer;
+import Utilities.Item;
+import Utilities.Product;
+import Utilities.Transaction;
+
+public class OderShippingFacade implements ActionListener{
 	/*GUI*/
 	private JFrame frame;//Window of the shop
+	
 	//Create elements for first window
 	private JPanel productPanelAvailable = new JPanel(new BorderLayout());//Panel which contains the list of available product
 	private  JList<String> productList; //list of available product	
@@ -31,21 +43,14 @@ public class OrderShippingGUI implements ActionListener{
 	private JPanel shoppingCartPanel = new JPanel(new GridLayout(1,2));//Main Panel
 	/*Contents of customerPanel(1,1)*/
 	private JPanel OrderFormPanel = new JPanel(new GridLayout(6,1));//Panel which contains the space where to log in
-			/*Contents of customerPanelSearch(1,1)*/
 	private JPanel OrderFormPanelFirstName = new JPanel(new BorderLayout());//Panel which contains elements to indicate First Name
-			/*Contents of customerPanelSearch(2,1)*/
 	private JPanel OrderFormPanelLastName = new JPanel(new BorderLayout());//Panel which contains elements to indicate Last Name
-			/*Contents of customerPanelSearch(3,1)*/
 	private JPanel OrderFormPanelAddress = new JPanel(new BorderLayout());//Panel which contains elements to indicate Address
-		/*Contents of customerPanelSearch(4,1)*/
 	private JPanel OrderFormPanelEmail = new JPanel(new BorderLayout());//Panel which contains elements to indicate Email
-		/*Contents of customerPanelSearch(5,1)*/
 	private JPanel OrderFormPanelPhoneNumber = new JPanel(new BorderLayout());//Panel which contains elements to indicate Phone number
-		/*Contents of customerPanelSearch(5,1)*/
 	private JButton orderButton = new JButton ("Order");//Button to check if customer exists or not
-		/*Contents of customerPanel(1,2)*/
+	/*Contents of customerPanel(1,2)*/
 	private JPanel billPanelInfo = new JPanel(new BorderLayout());//Panel which contains information about the product
-			/*Contents of customerPanelInfo*/
 	private JLabel billInfoLabel = new JLabel();//Description of the product
 	
 	//JTextField
@@ -58,7 +63,7 @@ public class OrderShippingGUI implements ActionListener{
 	//Create elements last window
 	private JPanel ValidationPanel = new JPanel(new BorderLayout());//Validation purchase
 	
-	/*Classes*/
+	/*Entities*/
 	private StockEntity stock;
 	private Company company;
 	private ShippingEntity shippingEntity;
@@ -66,23 +71,24 @@ public class OrderShippingGUI implements ActionListener{
 	/*Variables*/
 	private Scanner scan = new Scanner(System.in);
 	List<Product> ProductsFromCompany = new ArrayList<Product>();
-	List<Product> ProductShoppingCart = new ArrayList<Product>();
+	//List<Product> ProductShoppingCart = new ArrayList<Product>();
+	List<Item> ProductShoppingCart = new ArrayList<Item>();
 	List<Product> AvailableProductFromCompany = new ArrayList<Product>();
-	List <Integer> numberItems = new ArrayList<Integer>();
+	//List <Integer> numberItems = new ArrayList<Integer>();
 	
 	
-	private OrderShippingGUI() {//Graphical User Interface of the Store
+	private OderShippingFacade() {//Graphical User Interface of the Store
 		//Initialize entities
 		stock = new StockEntity();
 		company = new Company();
-		shippingEntity = new ShippingEntity();
+		shippingEntity = new ShippingEntity();//TODO: to modify?
 		
-		openOnlineShipping();
+		openOnlineShop();
 	    
-	    ListofProduct();
+	    displayListOfProducts();
 	}
 	
-	private void openOnlineShipping() {
+	private void openOnlineShop() {//Create the window
 		//Create and initialize the window
 		frame = new JFrame("OrderShipping");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -100,7 +106,7 @@ public class OrderShippingGUI implements ActionListener{
 		orderButton.addActionListener((java.awt.event.ActionListener) this);
 	}
 	
-	private void ListofProduct() {
+	private void displayListOfProducts() {//Display the list of products the client can buy
 		
 		//Configure screen
 		productPanelAvailable.add(new JLabel("Available products"), BorderLayout.NORTH);//Add text to Panel
@@ -128,7 +134,7 @@ public class OrderShippingGUI implements ActionListener{
 		productPanelAvailable.revalidate();// tell the layout manager to reset based on the new component list
 	}
 	
-	private void ShoppingCart() {
+	private void displayShoppingCart() {//Display the client's Shopping Cart
 		productPanelAvailable.setVisible(false);
 		
 		/*Order form area*/
@@ -154,9 +160,10 @@ public class OrderShippingGUI implements ActionListener{
 		
 		OrderFormPanel.add(orderButton);//Add Search Button to Panel
 		shoppingCartPanel.add(OrderFormPanel);
-			/*Bill information area*/
+		
+		/*Bill information area*/
 		billPanelInfo.add(new JLabel("Bill Information"), BorderLayout.NORTH);//Add text to Panel
-		billInfoLabel.setText(company.getBillInformation(ProductShoppingCart, numberItems));//Display information of the bill
+		billInfoLabel.setText(company.getBillInformation(ProductShoppingCart));//Display information of the bill
 		billPanelInfo.add(billInfoLabel, BorderLayout.CENTER);//Add Label to Panel
 		shoppingCartPanel.add(billPanelInfo);
 		
@@ -166,7 +173,7 @@ public class OrderShippingGUI implements ActionListener{
 		shoppingCartPanel.revalidate();// tell the layout manager to reset based on the new component list
 	}
 	
-	private void ValidationMessage() {
+	private void displayValidationArea() {//Display a message validating the purchase made by the user
 		shoppingCartPanel.setVisible(false);
 		
 		/*validation area*/
@@ -208,22 +215,22 @@ public class OrderShippingGUI implements ActionListener{
 			addProductIntoShoppingCart(currentProduct);
 			
 			//Update the screen
-			ListofProduct();
+			displayListOfProducts();
 			
 		break;
 		
 		case "Shopping Cart"://Go to the shopping cart (next window)
-			ShoppingCart();
+			displayShoppingCart();
 		break;
 		
 		case "Order":
 			//Get customer information from the form
 			Customer customer = new Customer(customerFirstName.getText(), customerLastName.getText(), customerAddress.getText(),  customerEmail.getText(), customerPhoneNumber.getText() );
 			//Give information to the ShippingEntity
-			shippingEntity.UpdateShippingDetails(customer, ProductShoppingCart, numberItems);
+			shippingEntity.UpdateShippingDetails(new Transaction(customer, new Timestamp(new Date().getTime()),ProductShoppingCart,company.getTotalPrice(ProductShoppingCart)));
 			
 			//Update the Screen
-			ValidationMessage();
+			displayValidationArea();
 		break;
 		
 		}
@@ -232,13 +239,13 @@ public class OrderShippingGUI implements ActionListener{
 	
 	private void addProductIntoShoppingCart(Product p) {
 		boolean flag =false;
-		if(p.stock!=0) {//If the item is available
+		if(p.getStock()!=0) {//If the item is available
 			if(ProductShoppingCart.size()>0) {
 				for(int i=0 ; i<ProductShoppingCart.size(); i++) {//Check whether the product was already added
-					if(p.getID().compareTo(ProductShoppingCart.get(i).getID())==0) {//If the product already exists
+					if(p.getID().compareTo(ProductShoppingCart.get(i).getProducID())==0) {//If the product already exists
 						//Increase the number of item
-						int counter = numberItems.get(i)+1;
-						numberItems.set(i, counter);
+						int counter = ProductShoppingCart.get(i).getNumberItems()+1;
+						ProductShoppingCart.get(i).setNumberItems(counter);
 						//Refresh the stock
 						stock.modifyStockForProduct(p , ProductsFromCompany);
 						flag=true;
@@ -248,16 +255,14 @@ public class OrderShippingGUI implements ActionListener{
 				
 				if(flag == false) {//the product is not already added
 					//add the product in the Shopping Cart
-					ProductShoppingCart.add(p);//Add the product into the Shopping Cart
-					numberItems.add(1);	
+					ProductShoppingCart.add(new Item(p.getID(), p.getName(), 1, p.getPrice()));//Add the product into the Shopping Cart
 					//Refresh the stock
 					stock.modifyStockForProduct(p, ProductsFromCompany);
 				}
 				
 			}else {//First element to add into the list
 				//add the product in the Shopping Cart
-				ProductShoppingCart.add(p);//Add the product into the Shopping Cart
-				numberItems.add(1);
+				ProductShoppingCart.add(new Item(p.getID(), p.getName(), 1, p.getPrice()));//Add the product into the Shopping Cart
 				//Refresh the stock
 				stock.modifyStockForProduct(p, ProductsFromCompany);
 			}
@@ -267,7 +272,7 @@ public class OrderShippingGUI implements ActionListener{
 	}
 
 	public static void main(String[] args) {
-		new OrderShippingGUI();//run the Graphical User Interface
+		new OderShippingFacade();//run the Graphical User Interface
 	}
 	
 	

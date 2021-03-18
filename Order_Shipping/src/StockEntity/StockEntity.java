@@ -1,3 +1,4 @@
+package StockEntity;
 
 import java.io.File;
 import java.io.IOException;
@@ -20,6 +21,8 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import Utilities.Product;
+
 
 
 public class StockEntity {
@@ -41,7 +44,7 @@ public class StockEntity {
 			entityProducts.clear();
 		}
 		
-		String filepath = ".\\src\\Product_stock.xml";//Where is the file
+		String filepath = ".\\src\\StockEntity\\Product_stock.xml";//Where is the file
 		File fXmlFile = new File(filepath);//Create a file
 		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 		
@@ -90,10 +93,10 @@ public class StockEntity {
 		
 		//Rewrite the file
 		try{
-    		File file = new File(".\\src\\Product_stock.xml");//Where is the file to edit	
+    		File file = new File(".\\src\\StockEntity\\Product_stock.xml");//Where is the file to edit	
     		file.delete();//Delete the file
     		
-    		String filepath = ".\\src\\Product_stock.xml";//Where we want to create the file
+    		String filepath = ".\\src\\StockEntity\\Product_stock.xml";//Where we want to create the file
     		File fic = new File(filepath);//Create a file
     		DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
     		DocumentBuilder docBuilder = docFactory.newDocumentBuilder();

@@ -1,3 +1,4 @@
+package CompanyEntity;
 
 import java.io.File;
 import java.text.DecimalFormat;
@@ -17,6 +18,11 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import ShippingEntity.ShippingEntity;
+import StockEntity.StockEntity;
+import Utilities.Item;
+import Utilities.Product;
+
 
 public class Company {
 	
@@ -24,6 +30,7 @@ public class Company {
 	private StockEntity stock = new StockEntity();
 	
 	private List<Product> CompanyProducts = new ArrayList<Product>();
+	private double totalPrice;
 	
 	public Company() {
 		GetProductsFromFile();
@@ -41,7 +48,7 @@ public class Company {
 			CompanyProducts.clear();
 		}
 		
-		String filepath = ".\\src\\Product.xml";//Where is the file
+		String filepath = ".\\src\\CompanyEntity\\Product.xml";//Where is the file
 		File fXmlFile = new File(filepath);//Create a file
 		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 		
@@ -84,7 +91,7 @@ public class Company {
 		//write into file
 	}
 	
-	public String getBillInformation(List<Product> ProductShoppingCart, List<Integer> numberItems) {//get of the information about the final bill
+	public String getBillInformation(List<Item> ProductShoppingCart) {//get of the information about the final bill
 		//Limit the number of digits print
 				DecimalFormat numberFormat = new DecimalFormat("#.00");
 				String billInfo;
@@ -99,12 +106,12 @@ public class Company {
 				billInfo = "<html>";
 				
 				for(int i=0; i<ProductShoppingCart.size(); i++) {
-						billInfo = billInfo + "Quantity:"+numberItems.get(i)+
-									"<br>Desciption:"+ProductShoppingCart.get(i).name+
-									"<br>Unit Price:"+ProductShoppingCart.get(i).price+
-									"<br>Amount:"+numberFormat.format(ProductShoppingCart.get(i).price*numberItems.get(i))+
+						billInfo = billInfo + "Quantity:"+ProductShoppingCart.get(i).getNumberItems()+
+									"<br>Desciption:"+ProductShoppingCart.get(i).getProductName()+
+									"<br>Unit Price:"+ProductShoppingCart.get(i).getProductPrice()+
+									"<br>Amount:"+numberFormat.format(ProductShoppingCart.get(i).getProductPrice()*ProductShoppingCart.get(i).getNumberItems())+
 									"<br>---------------------------<br>";
-						subtotal=subtotal+(ProductShoppingCart.get(i).price*numberItems.get(i));
+						subtotal=subtotal+(ProductShoppingCart.get(i).getProductPrice()*ProductShoppingCart.get(i).getNumberItems());
 				}
 				
 				salesTaxes = (TaxRate*subtotal)/100.0;
@@ -117,6 +124,7 @@ public class Company {
 						   "<br>Sales Taxes "+TaxRate+"%: "+ numberFormat.format(salesTaxes)+
 						   "<br>Delivery Charges "+ deliveryCharges+
 						   "<br><br>Total Price :"+numberFormat.format(totalPrice)+"€ </html>";
+			
 
 				return billInfo;
 	}
@@ -137,10 +145,10 @@ public class Company {
 		
 		//Modify file
 		try{
-    		File file = new File(".\\src\\Product.xml");//Where is the file to edit	
+    		File file = new File(".\\src\\CompanyEntity\\Product.xml");//Where is the file to edit	
     		file.delete();//Delete the file
     		
-    		String filepath = ".\\src\\Product.xml";//Where we want to create the file
+    		String filepath = ".\\src\\CompanyEntity\\Product.xml";//Where we want to create the file
     		File fic = new File(filepath);//Create a file
     		DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
     		DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
@@ -190,6 +198,14 @@ public class Company {
     		e.printStackTrace();
     	}
 		
+	}
+
+	public double getTotalPrice(List<Item> productShoppingCart) {
+		double totalPrice =0.0;
+		for(int i=0 ; i<productShoppingCart.size(); i++) {
+			totalPrice = totalPrice + (productShoppingCart.get(i).getProductPrice()*productShoppingCart.get(i).getNumberItems());
+		}
+		return totalPrice;
 	}
 
 }

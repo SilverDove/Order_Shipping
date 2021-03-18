@@ -1,11 +1,12 @@
+package Utilities;
 import java.util.UUID;
 
 public class Product {
 	
-	protected String name;
-	protected double price;
-	protected int stock;
-	protected UUID id;
+	private String name;
+	private double price;
+	private int stock;
+	private UUID id;
 	
 	public Product(UUID id, String name, double price, int stock) {
 		this.id=id;
